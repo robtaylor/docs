@@ -36,7 +36,7 @@ A workflow that uses another workflow is referred to as a "caller" workflow. The
 
 If you reuse a workflow from a different repository, any actions in the called workflow run as if they were part of the caller workflow. For example, if the called workflow uses `actions/checkout`, the action checks out the contents of the repository that hosts the caller workflow, not the called workflow.
 
-When a reusable workflow is triggered by a caller workflow, the `github` context is always associated with the caller workflow. The called workflow is automatically granted access to `github.token` and `secrets.GITHUB_TOKEN`. For more information about the `github` context, see [AUTOTITLE](/actions/learn-github-actions/contexts#github-context).
+When a reusable workflow is triggered by a caller workflow, the `github` context is always associated with the caller workflow. The called workflow is automatically granted access to `secrets.GITHUB_TOKEN`. For more information about the `github` context, see [AUTOTITLE](/actions/learn-github-actions/contexts#github-context).
 
 You can view the reused workflows referenced in your {% data variables.product.prodname_actions %} workflows as dependencies in the dependency graph of the repository containing your workflows. For more information, see “[About the dependency graph](/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph).”
 
@@ -163,6 +163,12 @@ You can define inputs and secrets, which can be passed from the caller workflow 
 1. Pass the input or secret from the caller workflow.
 
    {% data reusables.actions.pass-inputs-to-reusable-workflows %}
+
+### Passing github.token
+
+As the [github](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context).token context property is set by the Actions runner, it is only available within the execution steps of a job. This means it will be empty within [AUTOTITLE][/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idsecrets)
+
+You often do not need to manually pass the repo access token - [secrets.GITHUB_TOKEN](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication) will be set appropriately for the called workflow. If you do need to pass the token in a secret, you must populate it from `${{ secrets.GITHUB_TOKEN }}`. 
 
 ### Example reusable workflow
 
